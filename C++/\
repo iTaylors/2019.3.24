@@ -1,0 +1,206 @@
+#include <string>//要使用String,就得包含这个头文件
+#include <iostream>
+using namespace std;
+
+//string的3种遍历方式:operator[];迭代器;范围for
+//4G = 4294967294
+//4G * 4G = 18446744073709551614
+
+#if 0
+1
+//std::String::string
+//Sring类:它是一个顺序表类的容器(专门去管理字符的(顺序表)容器)
+//default---string():无参构造(即默认构造)----它创建的是一个空的顺序表
+//copy   ---string(const string& str):拷贝构造
+//substring---string(const string& str,size_t pos,size_t len = npos):
+//fill   ---string(size_t n,char c);
+#endif 
+
+#if 0
+2
+//std::String::operator=
+//string(1)    string& operator=(const string& str);//可以赋值一个string对象
+//c-string(2)  string& operator=(const char* s);    //可以赋值一个C风格的字符串
+//                                                  //把被赋值的s的内容给变了,被为这个"C风格字符串"
+//character(3) string& operator=(char c);           //可以赋值一个字符
+#endif 
+
+#if 0
+3
+//std::String::operator[]
+//      char& operator[](size_t pos);     //可读可写的接口
+//const char& operator[](size_t pos)const;//只读的接口
+#endif 
+
+#if 0
+4
+//std::string::iterator                            正向迭代器---普通(可读可写)
+//string::const_iterator()const         const 正向迭代器---只读(一般适用于你只想去遍历这个容器的内容) 
+//std::string::reverse_iterator                    反向迭代器
+//std::string::const_reverse_iterator()const;const 反向迭代器---只读(同上)
+#endif 
+
+/*一下是和容量(Capacity)相关的接口*/
+#if 0
+5
+std::string::resize 
+  void resize(size_t n)        重新设置顺序表的容量
+  void resize(size_t n,char c) 重新设置顺序表的容量并将新开辟的位置填充为你想要的字符
+#endif 
+
+//该看reverse接口了
+/*
+ * reserve:
+ * n > capacity:增容
+ * n <= capacity:不做任何操作*/
+  
+int main() {
+
+  string s;
+  size_t Capacity = s.capacity();
+  cout << "--------capacity:" << Capacity << "--------" << endl;
+
+  int i = 0;
+  for (;i < 200;++i) {
+    s.push_back(i);
+    if (Capacity != s.capacity()) {
+      Capacity = s.capacity();
+      cout << Capacity << endl;
+    }
+  }
+  /*
+   * resize(size_t n,char c):
+   * n < size: size = n
+   * n > size: size = n
+   *     1.n < capacity:0 ~ size - 1之间的值不变,size ~ n - 1之间的值初始化为程序员指定的字符
+   *     2.n > capacity:先扩容---开一个至少大于等于 n 的空间,拷贝原有空间的内容
+   *                    0 ~ size - 1之间的值不变,size ~ n - 1之间的值初始化为程序员指定的字符*/
+
+#if 0
+  对应 5
+  resize()的基础用法
+  string s("12345");
+  cout << s.size() << endl;
+  cout << s.capacity() << endl;
+
+  s.resize(10,'a');
+  cout << s.size() << endl;
+  int j = 0;
+  for (;j < s.size();++j) {
+    cout << s[j] << " ";
+  }
+  cout << endl;
+
+  j = 0;
+  s.resize(2,'b');
+  cout << s.size() << endl;
+  for (;j < s.size();++j) {
+    cout << s[j] << " ";
+  }
+  cout << endl;
+#endif 
+
+#if 0
+  范围 for 
+  const string s("qdcuiheuhye");
+  for (const char& e:s) {
+    cout << e << " ";
+  }
+  cout << endl;
+
+  for (const auto& e:s) {
+    cout << e << " ";
+  }
+  cout << endl;
+#endif 
+
+#if 0
+  对应 4
+  //迭代器:其内容是可读可写的
+  //实现原理:char* (大多数底层实现都是char*型的原始指针)
+  //作用  :访问元素---类似于指针,可以解引用,可以移动
+  //范围  :[begin,end)
+  //      :[rend,rbegin)
+
+  //反向迭代器
+  //++:反向的++是向前走
+  //--:反向的--是向后走
+  //rbegin():返回指向最后一个元素的上一个位置的迭代器
+  //rend():  返回指向第一个元素位置的迭代器
+  string s;
+  s = "12345";
+  string::reverse_iterator it = s.rbegin();
+  for (;it != s.rend();++it) {
+    cout << *it << " ";
+  }
+  cout << endl;
+
+  it = s.rbegin();
+  for (;it != s.rend();++it) {
+    *it = 'a';    //------说明迭代器是可读可写的
+    cout << *it << " ";
+  }
+  cout << endl;
+  
+
+  //正向迭代器
+  //++:正向的++是向后走
+  //--:正向的--是向前走
+  //begin():返回指向第一个元素位置的迭代器
+  //end() : 返回指向最后一个元素的下一个位置的迭代器
+  string s;
+  s = "122345";
+  string::iterator it = s.begin();
+  for (;it != s.end();++it) {
+    cout << *it << " ";
+  }
+  cout << endl;
+
+  it = s.begin();//迭代器起始的位置其实是可以++的,但是只能 it += 1,不能 it += 2;
+  ++it;          
+  for (;it != s.end();++it) {
+    cout << *it << " ";
+  }
+  cout << endl;
+#endif 
+
+#if 0
+  对应 3 
+  string s;
+  s = "12345";
+  int i = 0;
+  for (;i < s.size();++i) {
+    cout << s[i] << " ";    //用到了迭代器里面的重载运算符[]
+  }
+  cout << endl;
+#endif 
+
+#if 0
+  对应 2
+  string s;
+  s = "ggggg";       //(1)
+  cout << s << endl; 
+  s = '0';           //(3):不论s之前的内容是什么,现在s中就只包含一个"0"
+  cout << s << endl;
+#endif 
+
+#if 0
+  对应 1
+  string s;//无参构造       //空的,里面啥都没有
+
+  char strarr[] = {"12345"};
+  string s2(strarr);        //用上面这个数组去拷贝构造s2这个顺序表
+
+  string s3(strarr,2);      //"12"
+
+  string s4(5,'a');         //"aaaaa"
+
+  string s5(s2,1,3);        //"234"
+  cout << s << endl;
+  cout << s2 << endl;
+  cout << s3 << endl;
+  cout << s4 << endl;
+  cout << s5 << endl;
+#endif 
+  return 0;
+}
